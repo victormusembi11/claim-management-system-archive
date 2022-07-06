@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS CDN. -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Document</title>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+
+            <!-- logo - link to home page -->
+            <a class="navbar-brand" href="{% url 'home' %}">CMS</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon">X</span>
+            </button>        
+
+            <!-- navbar items -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+
+                    <!-- home page -->
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'home' %}">home</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <!-- logout -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'accounts:logout' %}">Logout</a>
+                        </li>
+                        {% if user.is_insurance %}
+                        <!-- insurance dashboard -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'insurance:dashboard' %}">insrurance dashboard</a>
+                        </li>
+                        {% elif user.is_client %}
+                        <!-- client dashboard -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'client:dashboard' %}">client dashboard</a>
+                        </li>
+                        {% elif user.is_superuser %}
+                        <!-- view all accounts -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'accounts:all-accounts' %}">user accounts</a>
+                        </li>
+                        {% endif %}
+                    {% else %}
+                    <!-- register options - insurance or client -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:register-options' %}">register</a>
+                    </li>
+                    <!-- login page -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:login' %}">login</a>
+                    </li>
+                    <!-- about page -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'about' %}">about</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <br>
+
+    <div class="container">
+
+        {% if user.is_authenticated %}
+            <p>Logged in as: {{ user }}</p>
+        {% endif %}
+
+        {% block body %} {% endblock body %}
+
+    </div>
+
+    <!-- Bootstrap JavaScript CDN. -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+</body>
+</html>
